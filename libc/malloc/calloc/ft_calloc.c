@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asebrech <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/22 16:03:34 by asebrech          #+#    #+#             */
-/*   Updated: 2021/03/26 14:39:10 by asebrech         ###   ########.fr       */
+/*   Created: 2021/03/26 14:10:38 by asebrech          #+#    #+#             */
+/*   Updated: 2021/03/26 15:09:13 by asebrech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_bzero(void *s, size_t n)
+void	*ft_calloc(size_t count, size_t size)
 {
-	if (n > 0)
-		ft_memset(s, 0, n);
+	char	*str;
+
+	str = malloc (size * count);
+	if (!str)
+		return (NULL);
+	ft_bzero(str, size * count);
+	return (str);
 }
