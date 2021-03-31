@@ -17,11 +17,11 @@ char	**nb_set(char const *s, char c, char **strs)
 	unsigned int	nb;
 
 	nb = 0;
-	while (s1)
+	while (*s)
 	{
-		if (*s1 == c)
+		if (*s == c)
 			nb++;
-		s1++;
+		s++;
 	}
 	strs = malloc(sizeof(char *) * nb + 1);
 	return (strs);
@@ -34,9 +34,9 @@ char	**len_set(char const *s, char c, char **strs)
 
 	len = 0;
 	i = 0;
-	while (s1)
+	while (*s)
 	{
-		if (!(*s1 == c))
+		if (!(*s == c))
 			len++;
 		else
 		{
@@ -44,7 +44,7 @@ char	**len_set(char const *s, char c, char **strs)
 			len = 0;
 			i++;
 		}
-		s1++;
+		s++;
 	}
 	return (strs);
 }
@@ -52,15 +52,20 @@ char	**len_set(char const *s, char c, char **strs)
 char	**cpy_set(char const *s, char c, char **strs)
 {
 	unsigned int i;
+	unsigned int j;
 
 	i = 0;
-	while (s1)
+	j = 0;
+	while (*s)
 	{
-		while (!(*s1 == c))
-			*strs[i]++ = *s1++;
-		if (*s1 == c)
-			i++:
-		s1++;
+		if (*s != c)
+		{
+			strs[i][j] = *s++;
+			j++;
+		}
+		else
+			i++;
+		s++;
 	}
 }
 
