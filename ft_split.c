@@ -6,73 +6,99 @@
 /*   By: asebrech <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 16:27:03 by asebrech          #+#    #+#             */
-/*   Updated: 2021/03/31 17:59:55 by asebrech         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:08:11 by asebrech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	**nb_set(char const *s, char c, char **strs)
+static unsigned int	nb_strs(char const *s, char c)
 {
 	unsigned int	nb;
 
 	nb = 0;
+	while (*s && *s == c)
+		s++;
 	while (*s)
 	{
-		if (*s == c)
+		if (*s == c )
+		{
 			nb++;
-		s++;
+			while (*s && *s == c)
+				s++;
+		}
+		else
+			s++;
 	}
-	strs = malloc(sizeof(char *) * nb + 1);
-	return (strs);
+	if ((*s - 1) != c)
+		nb++;
+	return (nb);
 }
 
-char	**len_set(char const *s, char c, char **strs)
+static unsigned int	len_word(char const *s, char c, unsigned int i)
 {
 	unsigned int	len;
-	unsigned int	i;
 
 	len = 0;
-	i = 0;
-	while (*s)
+	while (s[i] && s[i] != c)
 	{
-		if (!(*s == c))
-			len++;
-		else
-		{
-			strs[i] = malloc(sizeof(char) * len + 1);
-			len = 0;
-			i++;
-		}
-		s++;
+		len++;
+		i++;
 	}
-	return (strs);
+	return (len);
 }
 
-char	**cpy_set(char const *s, char c, char **strs)
+static char			**free_strs(char **strs, int j)
 {
-	unsigned int i;
-	unsigned int j;
+	while (j > 0)
+	{
+		j--;
+		free(strs[j]);
+	}
+	free(strs);
+	return (NULL);
+}
+
+static char			**dup_strs(char const *s, char c, unsigned int len, char **strs)
+{
+	unsigned int	i;
+	unsigned int	j;
+	unsigned int	k;
 
 	i = 0;
 	j = 0;
-	while (*s)
+	while ( s[i] && j < len)
 	{
-		if (*s != c)
-		{
-			strs[i][j] = *s++;
-			j++;
-		}
-		else
+		k = 0;
+		while (s[i] == c)
 			i++;
-		s++;
+		strs[j] = malloc(sizeof(char) * len_word(s, c, i) + 1);
+		if (!strs[i])
+			return (free_strs(strs, j));
+		while (s[i] && s[i] != c)
+		{
+			strs[j][k] = s[i];
+				i++;
+				k++;
+		}
+		strs[j][k] = '\0';
+		j++;
 	}
+	strs[j] = 0;
+	return (strs);
 }
 
-char	**ft_split(char const *s, char c)
+char				**ft_split(char const *s, char c)
 {
-	char	**strs;
+	char			**strs;
+	unsigned int	len;
 
-	strs = nb_set(s, c, strs);
-	strs = len_set(s, c, strs);
+	if (!s)
+		return (NULL);
+	len = nb_strs(s, c);
+	strs = malloc(sizeof(char *) * len + 1);
+	if (!strs)
+		return (NULL);
+	strs = dup_strs(s, c, len, strs);
+	return (strs);
 }
