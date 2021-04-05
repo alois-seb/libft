@@ -5,100 +5,119 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: asebrech <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/31 16:27:03 by asebrech          #+#    #+#             */
-/*   Updated: 2021/04/01 17:08:11 by asebrech         ###   ########.fr       */
+/*   Created: 2021/04/05 10:41:45 by asebrech          #+#    #+#             */
+/*   Updated: 2021/04/05 11:18:33 by asebrech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static unsigned int	nb_strs(char const *s, char c)
-{
-	unsigned int	nb;
-
-	nb = 0;
-	while (*s && *s == c)
-		s++;
-	while (*s)
-	{
-		if (*s == c )
-		{
-			nb++;
-			while (*s && *s == c)
-				s++;
-		}
-		else
-			s++;
-	}
-	if ((*s - 1) != c)
-		nb++;
-	return (nb);
-}
-
-static unsigned int	len_word(char const *s, char c, unsigned int i)
-{
-	unsigned int	len;
-
-	len = 0;
-	while (s[i] && s[i] != c)
-	{
-		len++;
-		i++;
-	}
-	return (len);
-}
-
-static char			**free_strs(char **strs, int j)
-{
-	while (j > 0)
-	{
-		j--;
-		free(strs[j]);
-	}
-	free(strs);
-	return (NULL);
-}
-
-static char			**dup_strs(char const *s, char c, unsigned int len, char **strs)
+static unsigned int	word_count(char const *s, char c)
 {
 	unsigned int	i;
+	unsigned int	count;
+
+	i = 0;
+	count = 0;
+	while (s[i] && s[i] == c)
+		i++;
+	while (s[i])
+	{
+		if (s[i] != c && (s[i + 1] == '\0' || s[i + 1] == c))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+static unsigned int	word_length(char const *s, char c, unsigned int a)
+{
+	unsigned int	i;
+	unsigned int	length;
+
+	i = 0;
+	length = 0;
+	while (s[i] == c)
+		i++;
+	while (a)
+	{
+		if (s[i] == c && s[i + 1] != c)
+			a--;
+		i++;
+	}
+	while (s[i] && s[i] != c)
+	{
+		length++;
+		i++;
+	}
+	return (length);
+}
+
+static char	*cpyword(char const *s, char c, unsigned int a)
+{
+	char			*word;
+	unsigned int	i;
 	unsigned int	j;
-	unsigned int	k;
 
 	i = 0;
 	j = 0;
-	while ( s[i] && j < len)
+	word = (char *)malloc(sizeof(char) * word_length(s, c, a) + 1);
+	if (!word)
+		return (NULL);
+	while (s[i] == c)
+		i++;
+	while (a)
 	{
-		k = 0;
-		while (s[i] == c)
-			i++;
-		strs[j] = malloc(sizeof(char) * len_word(s, c, i) + 1);
-		if (!strs[i])
-			return (free_strs(strs, j));
-		while (s[i] && s[i] != c)
-		{
-			strs[j][k] = s[i];
-				i++;
-				k++;
-		}
-		strs[j][k] = '\0';
-		j++;
+		if (s[i] == c && s[i + 1] != c)
+			a--;
+		i++;
 	}
-	strs[j] = 0;
-	return (strs);
+	while (s[i] && s[i] != c)
+	{
+		word[j] = s[i];
+		j++;
+		i++;
+	}
+	word[j] = 0;
+	return (word);
 }
 
-char				**ft_split(char const *s, char c)
+static void	free_tab(char **tab)
 {
-	char			**strs;
-	unsigned int	len;
+	unsigned int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+}
+
+char	**ft_split(char const *s, char c)
+{
+	unsigned int	i;
+	unsigned int	cases;
+	char			**tab;
 
 	if (!s)
 		return (NULL);
-	len = nb_strs(s, c);
-	strs = malloc(sizeof(char *) * len + 1);
-	if (!strs)
+	cases = word_count(s, c);
+	tab = (char **)malloc(sizeof(char *) * (cases + 1));
+	if (!tab)
 		return (NULL);
-	strs = dup_strs(s, c, len, strs);
-	return (strs);
+	i = 0;
+	while (i < cases)
+	{
+		tab[i] = cpyword(s, c, i);
+		if (!tab[i])
+		{
+			free_tab(tab);
+			free(tab);
+			return (NULL);
+		}
+		i++;
+	}
+	tab[i] = 0;
+	return (tab);
 }
