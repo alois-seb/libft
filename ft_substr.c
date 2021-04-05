@@ -6,7 +6,7 @@
 /*   By: asebrech <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 10:42:56 by asebrech          #+#    #+#             */
-/*   Updated: 2021/03/31 11:23:23 by asebrech         ###   ########.fr       */
+/*   Updated: 2021/04/05 15:54:24 by asebrech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	char	*str;
 	size_t	i;
 
-	if (start >= ft_strlen(s))
+	if (!s || start >= ft_strlen(s))
 		return (ft_strdup(""));
 	i = ft_strlen(s + start);
 	if (i < len)

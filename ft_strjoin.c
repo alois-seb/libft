@@ -6,7 +6,7 @@
 /*   By: asebrech <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/31 11:27:24 by asebrech          #+#    #+#             */
-/*   Updated: 2021/03/31 13:28:25 by asebrech         ###   ########.fr       */
+/*   Updated: 2021/04/05 15:56:49 by asebrech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char			*str;
 	unsigned int	i;
 
+	if (!s1)
+		return ((char *)s2);
+	if (!s2)
+		return ((char *)s1);
 	str = malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!str)
 		return (NULL);
