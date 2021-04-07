@@ -6,86 +6,50 @@
 /*   By: asebrech <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:26:48 by asebrech          #+#    #+#             */
-/*   Updated: 2021/04/05 13:32:38 by asebrech         ###   ########.fr       */
+/*   Updated: 2021/04/07 13:44:57 by asebrech         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	base10(int n)
+static int	ft_len(int nbr)
 {
-	int	base;
+	int	len;
 
-	if (n == 0)
-		return (1);
-	base = 0;
-	while (n != 0)
+	len = 0;
+	if (nbr <= 0)
+		len++;
+	while (nbr != 0)
 	{
-		n /= 10;
-		base++;
+		len++;
+		nbr /= 10;
 	}
-	return (base);
-}
-
-static char	*alloc_nb(int n)
-{
-	char	*numb;
-	int		size;
-
-	size = base10(n) + 1;
-	if (n < 0)
-	{
-		numb = (char *)malloc(sizeof(char) * size + 1);
-		if (!numb)
-			return (NULL);
-		numb[0] = '-';
-	}
-	else
-	{
-		numb = (char *)malloc(sizeof(char) * size);
-		if (!numb)
-			return (NULL);
-	}
-	return (numb);
-}
-
-static char	*rempl_tab(int n, char *numb)
-{
-	int				i;
-	unsigned int	nb;
-
-	i = base10(n);
-	if (n < 0)
-	{
-		i++;
-		nb = n * -1;
-	}
-	else
-		nb = n;
-	numb[i] = '\0';
-	i--;
-	while (numb[i] != '-' && i >= 0)
-	{
-		numb[i] = (nb % 10) + '0';
-		nb /= 10;
-		i--;
-	}
-	return (numb);
+	return (len);
 }
 
 char	*ft_itoa(int n)
 {
-	char	*numb;
+	char		*res;
+	int			len;
+	long int	nbr;
 
-	numb = alloc_nb(n);
-	if (!numb)
+	nbr = n;
+	len = ft_len(nbr);
+	res = malloc(sizeof(char) * len + 1);
+	if (!res)
 		return (NULL);
-	if (n == 0)
+	res[len] = '\0';
+	if (nbr < 0)
+		res[0] = '-';
+	else if (nbr == 0)
+		res[0] = '0';
+	if (nbr < 0)
+		nbr = -nbr;
+	while (nbr != 0)
 	{
-		numb[0] = '0';
-		numb[1] = '\0';
+		len--;
+		res[len] = nbr % 10 + '0';
+		nbr /= 10;
 	}
-	else
-		numb = rempl_tab(n, numb);
-	return (numb);
+	return (res);
 }
